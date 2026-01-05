@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heart-mlops-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: heart-mlops
+  template:
+    metadata:
+      labels:
+        app: heart-mlops
+    spec:
+      containers:
+      - name: api
+        image: your-dockerhub-username/heart-mlops:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
