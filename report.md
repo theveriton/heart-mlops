@@ -48,7 +48,7 @@ This report details the implementation of an end-to-end MLOps pipeline for heart
 - ROC-AUC (primary)
 - Accuracy, Precision, Recall
 
-**Best Model**: Random Forest (ROC-AUC: ~0.92)
+**Best Model**: Logistic Regression (ROC-AUC: 0.9113)
 
 ## 5. Experiment Tracking
 
@@ -85,10 +85,11 @@ This report details the implementation of an end-to-end MLOps pipeline for heart
 
 ## 9. Production Deployment
 
-**Platform**: Local Kubernetes (minikube)
-**Manifests**: `k8s/deployment.yaml`, `k8s/service.yaml`
-**Service**: LoadBalancer type
-**Verification**: Endpoint testing, screenshots in `screenshots/`
+**Platform**: Railway (public cloud)
+**URL**: https://heart-mlops-production.up.railway.app
+**Manifests**: Docker-based deployment
+**Service**: Web service with automatic scaling
+**Verification**: Endpoint testing with curl, deployed API functional
 
 ## 10. Monitoring and Logging
 
@@ -102,7 +103,7 @@ This report details the implementation of an end-to-end MLOps pipeline for heart
 [Data Source] -> [Data Prep] -> [Training] -> [MLflow]
                                       |
                                       v
-[GitHub] -> [CI/CD] -> [Docker Build] -> [K8s Deploy] -> [API]
+[GitHub] -> [CI/CD] -> [Docker Build] -> [Railway Deploy] -> [API]
                                       ^
                                       |
                                [Monitoring]
@@ -116,11 +117,11 @@ This report details the implementation of an end-to-end MLOps pipeline for heart
 
 ## 13. Repository Link
 
-[GitHub Repository](https://github.com/yourusername/heart-mlops)
+[GitHub Repository](https://github.com/theveriton/heart-mlops)
 
 ## 14. Conclusion
 
-The project successfully implements all MLOps requirements with automated pipelines, reproducible models, and production-ready deployment. Key achievements include hyperparameter tuning, experiment tracking, containerization, and local Kubernetes deployment.
+The project successfully implements all MLOps requirements with automated pipelines, reproducible models, and production-ready deployment on Railway. Key achievements include hyperparameter tuning, experiment tracking, containerization, and public cloud deployment.
 
 ## 15. Future Improvements
 
