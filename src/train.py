@@ -23,7 +23,7 @@ def main():
 
     pre = ColumnTransformer([
         ("num", StandardScaler(), num),
-        ("cat", OneHotEncoder(handle_unknown="ignore", sparse=False), cat)
+        ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat)
     ])
 
     models = {
