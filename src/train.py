@@ -21,9 +21,15 @@ def main():
     num = X.select_dtypes("number").columns.tolist()
     cat = X.select_dtypes("object").columns.tolist()
 
+    # Compatible OneHotEncoder for different sklearn versions
+    try:
+        encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:
+        encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
+    
     pre = ColumnTransformer([
         ("num", StandardScaler(), num),
-        ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat)
+        ("cat", encoder, cat)
     ])
 
     models = {
