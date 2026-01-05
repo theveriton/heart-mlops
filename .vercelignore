@@ -1,0 +1,11 @@
+mlruns/
+data/
+notebooks/
+screenshots/
+.git/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+model.pkl.bak
+*.tmp
