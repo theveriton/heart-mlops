@@ -1,12 +1,25 @@
 # Heart Disease MLops Project
 
-Quick start:
+This project implements an end-to-end MLOps pipeline for predicting heart disease risk using the UCI Heart Disease dataset.
+
+## Architecture
+
+- **Data**: UCI Heart Disease dataset (14 features, binary target)
+- **Model**: Tuned Logistic Regression or Random Forest with preprocessing pipeline
+- **API**: FastAPI serving predictions via /predict endpoint
+- **Tracking**: MLflow for experiments
+- **CI/CD**: GitHub Actions for testing, linting, training
+- **Containerization**: Docker
+- **Deployment**: Kubernetes (local via manifests)
+- **Monitoring**: Basic request logging and metrics endpoint
+
+## Quick Start
 
 1. Create a virtual environment and install requirements:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -23,6 +36,11 @@ python src/train.py
 uvicorn api.app:app --reload --host 0.0.0.0 --port 8000
 ```
 
+Test with:
+```bash
+curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{"features": {"age": 63, "sex": 1, "cp": 3, "trestbps": 145, "chol": 233, "fbs": 1, "restecg": 0, "thalach": 150, "exang": 0, "oldpeak": 2.3, "slope": 0, "ca": 0, "thal": 1}}'
+```
+
 4. Build Docker image:
 
 ```bash
@@ -30,8 +48,52 @@ docker build -t heart-mlops:local .
 docker run -p 8000:80 heart-mlops:local
 ```
 
-CI: GitHub Actions workflow is at `.github/workflows/ci.yml` and runs tests, data prep, and training.
+5. Deploy to local Kubernetes (requires minikube or Docker Desktop):
 
-Kubernetes manifests are in `k8s/` for local cluster deployment (replace image with your registry image).
+```bash
+kubectl apply -f k8s/
+kubectl get services  # Note the external IP/port
+```
 
-See `report.md` for the assignment report and screenshots folder for reporting.
+## EDA
+
+Run `notebooks/eda.ipynb` for exploratory data analysis including histograms, correlation heatmap, and class balance plots.
+
+## Experiment Tracking
+
+View MLflow experiments:
+
+```bash
+mlflow ui
+```
+
+## CI/CD
+
+GitHub Actions workflow runs on push/PR: linting (flake8), tests (pytest), data prep, training, artifact upload.
+
+## Monitoring
+
+- API logs requests to console
+- `/metrics` endpoint provides request count
+
+## Project Structure
+
+```
+.
+├── api/                 # FastAPI app
+├── data/raw/           # Dataset
+├── k8s/                # Kubernetes manifests
+├── mlruns/             # MLflow experiments
+├── notebooks/          # EDA notebook
+├── screenshots/        # For reporting
+├── src/                # Data prep and training
+├── tests/              # Unit tests
+├── Dockerfile          # Containerization
+├── requirements.txt    # Dependencies
+├── .gitignore          # Git ignore rules
+└── README.md           # This file
+```
+
+## Report
+
+See `report.md` for the full assignment report including setup, EDA, modeling, CI/CD screenshots, and architecture diagram.

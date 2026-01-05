@@ -12,6 +12,9 @@ app = FastAPI()
 # Load the fitted pipeline (preprocessing + model)
 model = joblib.load("model.pkl")
 
+# Simple metrics
+predict_requests = 0
+
 
 class PredictRequest(BaseModel):
     features: Dict[str, float]
@@ -22,8 +25,16 @@ def home():
     return {"status": "running"}
 
 
+@app.get("/metrics")
+def metrics():
+    return {"predict_requests": predict_requests}
+
+
 @app.post("/predict")
 async def predict(req: PredictRequest, request: Request):
+    global predict_requests
+    predict_requests += 1
+    
     features = req.features
     df = pd.DataFrame([features])
     try:

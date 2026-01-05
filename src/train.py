@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 import mlflow
 import mlflow.sklearn
-from sklearn.model_selection import cross_validate
+from sklearn.model_selection import cross_validate, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -27,26 +27,32 @@ def main():
     ])
 
     models = {
-        "log_reg": LogisticRegression(max_iter=1000),
-        "rf": RandomForestClassifier(n_estimators=100, random_state=42)
+        "log_reg": {
+            "model": LogisticRegression(max_iter=1000),
+            "params": {"model__C": [0.1, 1, 10], "model__penalty": ["l2"]}
+        },
+        "rf": {
+            "model": RandomForestClassifier(random_state=42),
+            "params": {"model__n_estimators": [50, 100, 200], "model__max_depth": [None, 10, 20]}
+        }
     }
 
     best_score = 0
     best_name = None
     best_model = None
 
-    # Compare models using cross-validated metrics
-    for name, m in models.items():
-        pipe = Pipeline([("pre", pre), ("model", m)])
-        scores = cross_validate(pipe, X, y, cv=5,
-                                scoring=["accuracy", "precision", "recall", "roc_auc"],
-                                return_train_score=False)
-        mean_roc = scores["test_roc_auc"].mean()
-        print(f"{name}: ROC-AUC={mean_roc:.4f}")
+    # Tune and compare models
+    for name, config in models.items():
+        pipe = Pipeline([("pre", pre), ("model", config["model"])])
+        grid = GridSearchCV(pipe, config["params"], cv=5, scoring="roc_auc", n_jobs=-1)
+        grid.fit(X, y)
+        
+        mean_roc = grid.best_score_
+        print(f"{name}: Best ROC-AUC={mean_roc:.4f}, Params={grid.best_params_}")
 
         if mean_roc > best_score:
             best_score = mean_roc
-            best_model = pipe
+            best_model = grid.best_estimator_
             best_name = name
 
     # Fit best model on full data
@@ -57,7 +63,7 @@ def main():
     joblib.dump(best_model, model_path)
     print("Saved model to", model_path)
 
-    # MLflow logging (local)
+    # MLflow logging
     try:
         mlflow.set_experiment("heart-disease-experiments")
         with mlflow.start_run(run_name=f"train_{best_name}"):
