@@ -51,11 +51,38 @@ Test with:
 curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{"features": {"age": 63, "sex": 1, "cp": 3, "trestbps": 145, "chol": 233, "fbs": 1, "restecg": 0, "thalach": 150, "exang": 0, "oldpeak": 2.3, "slope": 0, "ca": 0, "thal": 1}}'
 ```
 
+## Live Deployment (Railway)
+
+Live URL:
+- https://heart-mlops-production.up.railway.app/predict
+
+### Test (negative / low-risk example)
+
+```bash
+curl -X POST "https://heart-mlops-production.up.railway.app/predict" \
+   -H "Content-Type: application/json" \
+   -d '{"features": {"age": 40, "sex": 0, "cp": 1, "trestbps": 110, "chol": 180, "fbs": 0, "restecg": 0, "thalach": 170, "exang": 0, "oldpeak": 0.0, "slope": 0, "ca": 0, "thal": 1}}'
+```
+
+### Test (positive / high-risk example)
+
+```bash
+curl -X POST "https://heart-mlops-production.up.railway.app/predict" \
+   -H "Content-Type: application/json" \
+   -d '{"features": {"age": 70, "sex": 1, "cp": 4, "trestbps": 160, "chol": 300, "fbs": 1, "restecg": 2, "thalach": 120, "exang": 1, "oldpeak": 3.0, "slope": 2, "ca": 3, "thal": 3}}'
+```
+
+Expected response format:
+
+```json
+{"prediction": 0, "risk_score": 0.12}
+```
+
 4. Build Docker image:
 
 ```bash
 docker build -t heart-mlops:local .
-docker run -p 8000:80 heart-mlops:local
+docker run -p 8000:8000 heart-mlops:local
 ```
 
 5. Deploy to local Kubernetes (requires minikube or Docker Desktop):
