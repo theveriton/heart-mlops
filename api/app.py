@@ -4,6 +4,7 @@ from typing import Dict
 import joblib
 import pandas as pd
 import logging
+import sklearn
 
 logging.basicConfig(level=logging.INFO)
 
@@ -11,6 +12,10 @@ app = FastAPI()
 
 # Load the fitted pipeline (preprocessing + model)
 model = joblib.load("model.pkl")
+model_info = {
+    "model_type": type(model).__name__,
+    "sklearn_version": sklearn.__version__
+}
 
 # Simple metrics
 predict_requests = 0
@@ -23,6 +28,11 @@ class PredictRequest(BaseModel):
 @app.get("/")
 def home():
     return {"status": "running"}
+
+
+@app.get("/info")
+def info():
+    return model_info
 
 
 @app.get("/metrics")
