@@ -33,6 +33,10 @@ def main():
     ])
 
     models = {
+        "log_reg": {
+            "model": LogisticRegression(max_iter=1000),
+            "params": {"model__C": [0.1, 1, 10], "model__penalty": ["l2"]}
+        },
         "rf": {
             "model": RandomForestClassifier(random_state=42),
             "params": {"model__n_estimators": [50, 100, 200], "model__max_depth": [None, 10, 20]}
