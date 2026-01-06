@@ -78,6 +78,8 @@ Expected response format:
 {"prediction": 0, "risk_score": 0.12}
 ```
 
+`prediction` will be `0` (no disease) or `1` (disease), and `risk_score` is a probability-like score between 0 and 1.
+
 4. Build Docker image:
 
 ```bash
