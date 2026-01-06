@@ -32,7 +32,17 @@ def home():
 
 @app.get("/info")
 def info():
-    return model_info
+    details = model_info.copy()
+    try:
+        inner = None
+        has_multi = False
+        if hasattr(model, "named_steps") and "model" in model.named_steps:
+            inner = type(model.named_steps["model"]).__name__
+            has_multi = hasattr(model.named_steps["model"], "multi_class")
+        details.update({"inner_model": inner, "has_multi_class_attr": has_multi})
+    except Exception as e:
+        details.update({"inner_error": str(e)})
+    return details
 
 
 @app.get("/metrics")
