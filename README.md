@@ -74,7 +74,31 @@ GitHub Actions workflow runs on push/PR: linting (flake8), tests (pytest), data 
 ## Monitoring
 
 - API logs requests to console
-- `/metrics` endpoint provides request count
+- `/metrics` endpoint provides Prometheus-formatted metrics (request count)
+
+### Local Prometheus/Grafana Setup
+
+1. Start the API locally on port 8000 (as above).
+
+2. Run Prometheus and Grafana:
+
+```bash
+docker-compose up -d
+```
+
+3. Access:
+   - Prometheus: http://localhost:9090
+   - Grafana: http://localhost:3000 (admin/admin)
+
+4. In Grafana:
+   - Add Prometheus as data source (URL: http://prometheus:9090)
+   - Create dashboard with query: `predict_requests_total`
+
+5. Stop:
+
+```bash
+docker-compose down
+```
 
 ## Project Structure
 

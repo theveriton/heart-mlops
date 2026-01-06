@@ -5,6 +5,7 @@ import joblib
 import pandas as pd
 import logging
 import sklearn
+from prometheus_client import Counter, generate_latest
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,8 +18,8 @@ model_info = {
     "sklearn_version": sklearn.__version__
 }
 
-# Simple metrics
-predict_requests = 0
+# Prometheus metrics
+predict_requests = Counter('predict_requests_total', 'Total number of prediction requests')
 
 
 class PredictRequest(BaseModel):
@@ -47,13 +48,12 @@ def info():
 
 @app.get("/metrics")
 def metrics():
-    return {"predict_requests": predict_requests}
+    return generate_latest()
 
 
 @app.post("/predict")
 async def predict(req: PredictRequest, request: Request):
-    global predict_requests
-    predict_requests += 1
+    predict_requests.inc()  # Increment Prometheus counter
     
     features = req.features
     df = pd.DataFrame([features])
