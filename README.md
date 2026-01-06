@@ -2,6 +2,16 @@
 
 This project implements an end-to-end MLOps pipeline for predicting heart disease risk using the UCI Heart Disease dataset.
 
+MLOps Assignment (Group 33)
+
+## Contributors
+
+- ARYAMANN SINGH - 2024aa05025
+- ANANTHAN P   - 2024aa05692
+- BALAJI R  - 2024aa05844
+- BALSURE ANIKET K  - 2024aa05296
+- SAURAV BANSAL - 2023aa05710
+
 ## Architecture
 
 - **Data**: UCI Heart Disease dataset (14 features, binary target)
