@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
 from typing import Dict
 import joblib
@@ -48,7 +48,7 @@ def info():
 
 @app.get("/metrics")
 def metrics():
-    return generate_latest()
+    return Response(content=generate_latest(), media_type="text/plain; charset=utf-8")
 
 
 @app.post("/predict")
