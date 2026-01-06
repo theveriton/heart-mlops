@@ -146,6 +146,7 @@ Thumbs.db
 
 # MLflow
 mlruns/
+mlflow.db
 
 # Models and artifacts
 model.pkl
